@@ -1,8 +1,52 @@
-﻿@{
+﻿@model MessageViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model.Messages.Count == 0)
+{
+    using (Html.BeginForm("Open", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="mb-3">
+            <input class=button type="file" name="file" />
+            <input type="submit" value="Öppna" />
+        </div>
+    }
+}
+
+@if (Model.Messages.Count > 0)
+{
+    <h1 class="h1">Textväggen</h1>
+
+    @foreach (var row in Model.Messages)
+    {
+
+        <div class="border mb-2 rounded shadow-sm">
+            <p class="col-form-label px-3">@row.Text</p>
+            <div class="hstack justify-content-sm-between">
+                <p class="form-text px-3">@row.Sender @row.Date.ToShortDateString()</p>
+                @using (Html.BeginForm("Delete", "Home", FormMethod.Post))
+                {
+                    @Html.Hidden("Id", @row.Id, new { @id = "Id"})
+                    <input value="Radera" type="submit" class="mx-1 btn-danger rounded" />
+                }
+            </div>
+        </div>
+    }
+    using (Html.BeginForm("Add", "Home", FormMethod.Post))
+    {
+        <div class="vstack">
+            @Html.TextAreaFor(m => m.Message.Text, new { required = "required", placeholder = "Nytt inlägg...", @class="rounded mb-3 textarea form-control" })
+            <div class="text-end">
+                @Html.LabelFor(m => m.Message.Sender)
+                @Html.TextBoxFor(m => m.Message.Sender, new { placeholder = "Anonym", @class="rounded" } )
+                <input type="submit" value="Skicka" class="btn-success rounded" />
+            </div>
+
+        </div>
+    }
+}
+
+
+
