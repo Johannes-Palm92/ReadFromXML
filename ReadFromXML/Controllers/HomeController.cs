@@ -37,6 +37,7 @@ namespace ReadFromXML.Controllers
         {
             var model = new MessageViewModel();
             model.Messages = XMLHelper.Load(file);
+            XMLHelper.Save(model.Messages);
             return View("Index", model);
         }
 
@@ -46,6 +47,7 @@ namespace ReadFromXML.Controllers
             ModelState.Clear();
             var model = new MessageViewModel();
             model.Messages = XMLHelper.Add(message);
+            XMLHelper.Save(model.Messages);
             return View("Index", model);
         }
 
@@ -55,6 +57,7 @@ namespace ReadFromXML.Controllers
             ModelState.Clear();
             var model = new MessageViewModel();
             model.Messages = XMLHelper.Delete(Id);
+            XMLHelper.Save(model.Messages);
             return View("Index", model);
         }
     }
